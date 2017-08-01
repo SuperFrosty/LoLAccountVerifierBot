@@ -21,4 +21,4 @@ class VerificationCore(commands.Bot):
         super().run(self.bot_token)
 
 if __name__ == '__main__':
-    VerificationCore.run()
+    VerificationCore().run()

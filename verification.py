@@ -3,17 +3,20 @@ import random
 import string
 import discord
 from discord.ext import commands
+import asyncio
 
 class Verification:
 
     def __init__(self, bot):
         self.bot = bot
-        
+
+    @commands.command()
     async def verify(self, ctx, sum_name: str, region: str):
         random_string = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(10))
         try:
-            await ctx.author.send("", embed=discord.Embed(colour=0x1AFFA7, description="Please rename your first rune page to {}, wait a while, then reply with 'done'.".format(random_string)))
-            initial_embed = discord.Embed(colour=0x1AFFA7, description="{}, instructions DM'd!".format(ctx.author.mention))
+            await ctx.author.send("", embed=discord.Embed(colour=0x1AFFA7, title="Instructions:", description="Please rename your first rune page to `{}`, wait a while, then reply with 'done'.".format(random_string)))
+            initial_embed = discord.Embed(colour=0x1AFFA7)
+            initial_embed.add_field(name="Instructions DM'd!", value=ctx.author.mention)
             await ctx.send("", embed=initial_embed)
         except discord.Forbidden:
             await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Couldn't DM you, perhaps you have them disable?"))
@@ -21,9 +24,11 @@ class Verification:
         def check(m):
             return m.content == 'done' and m.author == ctx.author
 
-        msg = self.bot.wait_for('message', check=check)
-
-        if 'done' in msg.content:
+        try:
+            msg = await self.bot.wait_for('message', check=check, timeout=3600)
+        except asyncio.TimeoutError:
+            await ctx.author.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="You didn't respond in time."))
+        else:
             summoner = cass.Summoner(name=sum_name, region=region)
             if summoner.exists:
                 rank_solo, rank_flex, rank_tt = '', '', ''
