@@ -14,7 +14,7 @@ class Verification:
 
     @commands.command()
     async def verify(self, ctx, sum_name: str, region: str):
-        
+
         if region == 'KR':
             await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Riot recently disallowed rune page verification of korean accounts, sorry!"))
             return
@@ -37,7 +37,13 @@ class Verification:
             await ctx.author.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="You didn't respond in time."))
         else:
             await ctx.author.trigger_typing()
-            summoner = cass.Summoner(name=sum_name, region=region)
+
+            try:
+                summoner = cass.Summoner(name=sum_name, region=region)
+            except ValueError:
+                await ctx.author.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="{} is not a valid region.".format(region)))
+                return
+            
             if summoner.exists:
                 rank_solo, rank_flex, rank_tt = '', '', ''
                 pages = summoner.rune_pages
