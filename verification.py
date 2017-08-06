@@ -93,27 +93,27 @@ class Verification:
                         role = discord.utils.find(lambda m: m.name == 'Challenger', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Challenger'
-                    if highest_rank == 6:
+                    elif highest_rank == 6:
                         role = discord.utils.find(lambda m: m.name == 'Master', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Master'
-                    if highest_rank == 5:
+                    elif highest_rank == 5:
                         role = discord.utils.find(lambda m: m.name == 'Diamond', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Diamond'
-                    if highest_rank == 4:
+                    elif highest_rank == 4:
                         role = discord.utils.find(lambda m: m.name == 'Platinum', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Platinum'
-                    if highest_rank == 3:
+                    elif highest_rank == 3:
                         role = discord.utils.find(lambda m: m.name == 'Gold', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Gold'
-                    if highest_rank == 2:
+                    elif highest_rank == 2:
                         role = discord.utils.find(lambda m: m.name == 'Silver', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Silver'
-                    if highest_rank == 1:
+                    elif highest_rank == 1:
                         role = discord.utils.find(lambda m: m.name == 'Bronze', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Bronze'
