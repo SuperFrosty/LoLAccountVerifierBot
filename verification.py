@@ -25,7 +25,7 @@ class Verification:
             region = args[1]
         if len(args) == 3:
             sum_name = u"{0} {1}".format(args[0], args[1])
-            region = args[3]
+            region = args[2]
 
         if region == 'KR':
             await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Riot recently disallowed rune page verification of korean accounts, sorry!"))
