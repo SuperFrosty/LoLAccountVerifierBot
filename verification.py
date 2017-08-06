@@ -1,11 +1,14 @@
-import cassiopeia as cass
-from cassiopeia.configuration import settings
-from cassiopeia.core import RunePages
+import asyncio
 import random
 import string
+import urllib.parse
+
+import cassiopeia as cass
 import discord
+from cassiopeia.configuration import settings
+from cassiopeia.core import RunePages
 from discord.ext import commands
-import asyncio
+
 
 class Verification:
 
@@ -13,7 +16,16 @@ class Verification:
         self.bot = bot
 
     @commands.command()
-    async def verify(self, ctx, sum_name: str, region: str):
+    async def verify(self, ctx, *args):
+        if len(args) == 1:
+            await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Missing required argument!"))
+            return
+        if len(args) == 2:
+            sum_name = u'{0}'.format(args[0])
+            region = args[1]
+        if len(args) == 3:
+            sum_name = u"{0} {1}".format(args[0], args[1])
+            region = args[3]
 
         if region == 'KR':
             await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Riot recently disallowed rune page verification of korean accounts, sorry!"))
@@ -39,7 +51,7 @@ class Verification:
             await ctx.author.trigger_typing()
 
             try:
-                summoner = cass.Summoner(name=sum_name, region=region)
+                summoner = cass.Summoner(name=urllib.parse.quote(sum_name.encode('utf-8')), region=region)
             except ValueError:
                 await ctx.author.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="{} is not a valid region.".format(region)))
                 return
@@ -105,6 +117,9 @@ class Verification:
                         role = discord.utils.find(lambda m: m.name == 'Bronze', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Bronze'
+                    else:
+                        await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="That account's unranked!"))
+                        return
                     await ctx.author.send("", embed=discord.Embed(colour=0x1AFFA7, title="Success!", description="You've been given the `{}` role.".format(role_given)))
                     settings.pipeline._cache._cache._data[RunePages].clear()
                 else:
