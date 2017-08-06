@@ -118,7 +118,7 @@ class Verification:
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Bronze'
                     else:
-                        await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="That account's unranked!"))
+                        await ctx.author.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="That account's unranked!"))
                         return
                     await ctx.author.send("", embed=discord.Embed(colour=0x1AFFA7, title="Success!", description="You've been given the `{}` role.".format(role_given)))
                     settings.pipeline._cache._cache._data[RunePages].clear()
