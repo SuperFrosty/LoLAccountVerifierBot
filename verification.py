@@ -84,7 +84,7 @@ class Verification:
                             print("{0} on region {1} - Flex: {2}".format(sum_name, region, rank_flex))
                         if queue == 'RANKED_FLEX_TT':
                             rank_tt = league.tier.value
-                            print("{0} on region {1} - TT: {2}".format(sum_name, region, TT))
+                            print("{0} on region {1} - TT: {2}".format(sum_name, region, rank_tt))
                     ranks = [rank_solo, rank_flex, rank_tt]
                     numeric_ranks = []
                     for rank in ranks:
@@ -148,7 +148,7 @@ class Verification:
             else:
                 await ctx.author.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Couldn't find summoner '{0}' on the {1} region".format(summoner.name, region)))
                 reason = "Couldn't find summoner"
-                print("{0} on region {1} - failed: {2}".format(sum_name, region, failed))
+                print("{0} on region {1} - failed: {2}".format(sum_name, region, reason))
                 return
 
 def setup(bot):
