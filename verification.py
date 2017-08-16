@@ -9,6 +9,7 @@ from cassiopeia.configuration import settings
 from cassiopeia.core import RunePages
 from discord.ext import commands
 
+VALID_REGIONS = ["BR", "EUW", "EUNE", "JP", "KR", "LAN", "LAS", "NA", "OCE", "RU", "TR"]
 
 class Verification:
 
@@ -17,15 +18,13 @@ class Verification:
 
     @commands.command()
     async def verify(self, ctx, *args):
-        if len(args) == 1:
-            await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Missing required argument!"))
+        if args[-1].upper() in VALID_REGIONS:
+            region = args[-1].upper()
+            sum_name = ' '.join(args[:-(len(args) - 2)])
+            print(sum_name)
+        else:
+            await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Invalid region {0}!".format(args[-1].upper())))
             return
-        if len(args) == 2:
-            sum_name = u'{0}'.format(args[0])
-            region = args[1]
-        if len(args) == 3:
-            sum_name = u"{0} {1}".format(args[0], args[1])
-            region = args[2]
 
         if region == 'KR':
             await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Riot recently disallowed rune page verification of korean accounts, sorry!"))
@@ -45,7 +44,7 @@ class Verification:
             reason = "Couldn't DM"
             print("{0} on region {1} - failed: {2}".format(sum_name, region, reason))
 
-        
+
         def check(m):
             return m.content == 'done' and m.author == ctx.author
 
@@ -67,7 +66,7 @@ class Verification:
                 reason = "Invalid region {0}".format(region)
                 print("{0} on region {1} - failed: {2}".format(sum_name, region, reason))
                 return
-            
+
             if summoner.exists:
                 rank_solo, rank_flex, rank_tt = '', '', ''
                 pages = summoner.rune_pages
@@ -86,51 +85,32 @@ class Verification:
                             rank_tt = league.tier.value
                             print("{0} on region {1} - TT: {2}".format(sum_name, region, rank_tt))
                     ranks = [rank_solo, rank_flex, rank_tt]
-                    numeric_ranks = []
-                    for rank in ranks:
-                        if rank == 'CHALLENGER':
-                            numeric_ranks.append(7)
-                        elif rank == 'MASTER':
-                            numeric_ranks.append(6)
-                        elif rank == 'DIAMOND':
-                            numeric_ranks.append(5)
-                        elif rank == 'PLATINUM':
-                            numeric_ranks.append(4)
-                        elif rank == 'GOLD':
-                            numeric_ranks.append(3)
-                        elif rank == 'SILVER':
-                            numeric_ranks.append(2)
-                        elif rank == 'BRONZE':
-                            numeric_ranks.append(1)
-                        elif rank == '':
-                            numeric_ranks.append(0)
-                    highest_rank = max(numeric_ranks)
-                    print("{0} on region {1} - Max: {2}".format(sum_name, region, highest_rank))
-                    if highest_rank == 7:
+                    print("{0} on region {1} - Ranks: {2}".format(sum_name, region, ranks))
+                    if 'CHALLENGER' in ranks:
                         role = discord.utils.find(lambda m: m.name == 'Challenger', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Challenger'
-                    elif highest_rank == 6:
+                    elif 'MASTER' in ranks:
                         role = discord.utils.find(lambda m: m.name == 'Master', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Master'
-                    elif highest_rank == 5:
+                    elif "DIAMOND" in ranks:
                         role = discord.utils.find(lambda m: m.name == 'Diamond', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Diamond'
-                    elif highest_rank == 4:
+                    elif "PLATINUM" in ranks:
                         role = discord.utils.find(lambda m: m.name == 'Platinum', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Platinum'
-                    elif highest_rank == 3:
+                    elif "GOLD" in ranks:
                         role = discord.utils.find(lambda m: m.name == 'Gold', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Gold'
-                    elif highest_rank == 2:
+                    elif "SILVER" in ranks:
                         role = discord.utils.find(lambda m: m.name == 'Silver', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Silver'
-                    elif highest_rank == 1:
+                    elif "BRONZE" in ranks:
                         role = discord.utils.find(lambda m: m.name == 'Bronze', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Bronze'
@@ -140,11 +120,13 @@ class Verification:
                     await ctx.author.send("", embed=discord.Embed(colour=0x1AFFA7, title="Success!", description="You've been given the `{}` role.".format(role_given)))
                     print("{0} on region {1} - Success: {2}".format(sum_name, region, role_given))
                     settings.pipeline._cache._cache._data[RunePages].clear()
+                    return
                 else:
-                    await ctx.author.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Could not verify first rune page. Please wait a bit for the name change to save."))
+                    await ctx.author.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Could not verify first rune page. Expected: `{0}`, but was: `{1}`. Please wait a bit for the name change to save.".format(pages[0].name, random_string)))
                     reason = "Rune page not verified: {0}".format(pages[0].name)
                     print("{0} on region {1} - failed: {2}".format(sum_name, region, reason))
                     settings.pipeline._cache._cache._data[RunePages].clear()
+                    return
             else:
                 await ctx.author.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Couldn't find summoner '{0}' on the {1} region".format(summoner.name, region)))
                 reason = "Couldn't find summoner"
