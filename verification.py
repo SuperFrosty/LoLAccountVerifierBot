@@ -20,7 +20,7 @@ class Verification:
     async def verify(self, ctx, *args):
         if args[-1].upper() in VALID_REGIONS:
             region = args[-1].upper()
-            sum_name = ' '.join(args[:-(len(args) - 2)])
+            sum_name = ' '.join(args[:(len(args) - 1)])
             print(sum_name)
         else:
             await ctx.send("", embed=discord.Embed(colour=0xCA0147, title="Error!", description="Invalid region {0}!".format(args[-1].upper())))
