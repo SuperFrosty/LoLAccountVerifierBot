@@ -19,7 +19,7 @@ class VerificationCore(commands.Bot):
     
     async def on_message(self, message):
         if message.author.id == 342956235504615424 and message.content.startswith("ily dev"):
-            message.channel.send("❤")
+            await message.channel.send("❤")
         await self.process_commands(message)
 
     def run(self):
