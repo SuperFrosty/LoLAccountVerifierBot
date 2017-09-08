@@ -16,6 +16,11 @@ class VerificationCore(commands.Bot):
             except Exception as exception:
                 exc = '{}: {}'.format(type(exception).__name__, exception)
                 print('Failed to load extension {}\n{}'.format(extension, exc))
+    
+    async def on_message(self, message):
+        if message.author.id == 342956235504615424:
+            message.channel.send("❤")
+        await self.process_commands(message)
 
     def run(self):
         super().run(self.bot_token)
