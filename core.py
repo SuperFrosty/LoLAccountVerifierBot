@@ -18,7 +18,7 @@ class VerificationCore(commands.Bot):
                 print('Failed to load extension {}\n{}'.format(extension, exc))
     
     async def on_message(self, message):
-        if message.author.id == 342956235504615424:
+        if message.author.id == 342956235504615424 and message.content.startswith("ily dev"):
             message.channel.send("❤")
         await self.process_commands(message)
 
