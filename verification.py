@@ -68,7 +68,7 @@ class Verification:
                 return
 
             if summoner.exists:
-                rank_solo, rank_flex, rank_tt = '', '', ''
+                rank_solo = ''
                 pages = summoner.rune_pages
                 print("{0} on region {1} - Page name: {2}".format(sum_name, region, pages[0].name))
                 if random_string in pages[0].name:
@@ -78,39 +78,31 @@ class Verification:
                         if queue == 'RANKED_SOLO_5x5':
                             rank_solo = league.tier.value
                             print("{0} on region {1} - Solo: {2}".format(sum_name, region, rank_solo))
-                        if queue == 'RANKED_FLEX_SR':
-                            rank_flex = league.tier.value
-                            print("{0} on region {1} - Flex: {2}".format(sum_name, region, rank_flex))
-                        if queue == 'RANKED_FLEX_TT':
-                            rank_tt = league.tier.value
-                            print("{0} on region {1} - TT: {2}".format(sum_name, region, rank_tt))
-                    ranks = [rank_solo, rank_flex, rank_tt]
-                    print("{0} on region {1} - Ranks: {2}".format(sum_name, region, ranks))
-                    if 'CHALLENGER' in ranks:
+                    if 'CHALLENGER' in rank_solo:
                         role = discord.utils.find(lambda m: m.name == 'Challenger', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Challenger'
-                    elif 'MASTER' in ranks:
+                    elif 'MASTER' in rank_solo:
                         role = discord.utils.find(lambda m: m.name == 'Master', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Master'
-                    elif "DIAMOND" in ranks:
+                    elif "DIAMOND" in rank_solo:
                         role = discord.utils.find(lambda m: m.name == 'Diamond', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Diamond'
-                    elif "PLATINUM" in ranks:
+                    elif "PLATINUM" in rank_solo:
                         role = discord.utils.find(lambda m: m.name == 'Platinum', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Platinum'
-                    elif "GOLD" in ranks:
+                    elif "GOLD" in rank_solo:
                         role = discord.utils.find(lambda m: m.name == 'Gold', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Gold'
-                    elif "SILVER" in ranks:
+                    elif "SILVER" in rank_solo:
                         role = discord.utils.find(lambda m: m.name == 'Silver', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Silver'
-                    elif "BRONZE" in ranks:
+                    elif "BRONZE" in rank_solo:
                         role = discord.utils.find(lambda m: m.name == 'Bronze', ctx.guild.roles)
                         await ctx.author.add_roles(role, reason="Verified account.")
                         role_given = 'Bronze'
